@@ -76,9 +76,9 @@ if __name__ == "__main__":
 
     create_map_from_gpx(args.gpx_file_path)
 
-    # TODO: overlay doesn't work, 
+    # TODO: overlay doesn't work,
     # TODO: try bounding box instead of circle
     # TODO: add track to the map
     # TODO: https://github.com/marceloprates/prettymaps/issues/8
-    # TODO: try pretty-gpx
+    # TODO: try - https://github.com/ThomasParistech/pretty-gpx
     # TODO: own implementation of prettymaps that works with newer python
