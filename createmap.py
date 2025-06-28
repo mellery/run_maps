@@ -101,7 +101,36 @@ class GPXMapGenerator:
             
             # If overlay_track is True, add the track on top
             if overlay_track:
-                self.overlay_track(ax, coordinates)
+                # Get current axis limits from prettymaps
+                xlim = ax.get_xlim()
+                ylim = ax.get_ylim()
+                
+                # Transform GPS coordinates to match the map's coordinate system
+                # prettymaps uses UTM projection, we need to transform lat/lon to match
+                try:
+                    import pyproj
+                    
+                    # Create transformer from WGS84 (lat/lon) to the map's CRS
+                    # Determine UTM zone for the center point
+                    utm_zone = int((center[1] + 180) / 6) + 1
+                    utm_crs = f"EPSG:{32600 + utm_zone}" if center[0] >= 0 else f"EPSG:{32700 + utm_zone}"
+                    
+                    transformer = pyproj.Transformer.from_crs("EPSG:4326", utm_crs, always_xy=True)
+                    
+                    # Transform track coordinates
+                    lats, lons = zip(*coordinates)
+                    x_coords, y_coords = transformer.transform(lons, lats)
+                    
+                    ax.plot(x_coords, y_coords, color='red', linewidth=3, alpha=0.9, zorder=100)
+                    
+                except (ImportError, Exception) as e:
+                    print(f"Warning: Coordinate transformation failed ({e}), track may not align properly")
+                    lats, lons = zip(*coordinates)
+                    ax.plot(lons, lats, color='red', linewidth=3, alpha=0.9, zorder=100)
+                
+                # Ensure the view doesn't change
+                ax.set_xlim(xlim)
+                ax.set_ylim(ylim)
                 
         except Exception as e:
             print(f"Warning: Failed to create prettymaps background: {e}")
