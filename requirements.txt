@@ -18,7 +18,7 @@ numpy==2.2.0
 osmnx==1.2.2
 packaging==24.2
 pandas==2.2.3
-pillow==11.0.0
+pillow==12.1.1
 prettymaps==1.0.0
 pyparsing==3.2.0
 pyproj==3.7.0
